@@ -18,7 +18,6 @@ class Rays {
             i
         ;
 
-        // Draw the rays
         let gradient = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], r);
         gradient.addColorStop(0, `hsla(0, 0%, 100%, ${startAlpha}`);
         gradient.addColorStop(1, `hsla(0, 0%, 100%, ${endAlpha}`);
