@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>VecRays</title>
+    <style>
+        body { margin: 0; }
+        header {
+          height: 100vh;
+
+          --num-rays: 8;
+          /*--start-alpha: 0.2;*/
+          --end-alpha: 0.07;
+          background: 
+            paint(rays),
+            radial-gradient(circle at 50%, hsla(0, 0%, 100%, 1.0), hsla(0, 0%, 100%, 0.0) 350px)
+          hsl(351, 100%, 71%)
+          ;
+        }
+    </style>
+  </head>
+  <body>
+    <header></header>
+    <script>
+      if (CSS.paintWorklet) {
+        CSS.registerProperty({
+          name: '--num-rays',
+          syntax: '<integer>',
+          inherits: false,
+          initialValue: 4,
+        });
+        CSS.registerProperty({
+          name: '--start-alpha',
+          syntax: '<number>',
+          inherits: false,
+          initialValue: 0.2,
+        });
+        CSS.registerProperty({
+          name: '--end-alpha',
+          syntax: '<number>',
+          inherits: false,
+          initialValue: 0.2,
+        });
+        
+        
+        CSS.paintWorklet.addModule('paint.js')
+      }
+    </script>
+  </body>
+</html>
