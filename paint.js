@@ -7,26 +7,56 @@ class Rays {
         ]; 
     }
 
+    getProps(props) {
+        let p;
+
+        p = props.get('--num-rays');
+        if ('value' in p) 
+            this.n = p.value; // CSS.registerProperty() supported
+        else 
+            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
+                this.n = parseInt(p.toString())
+            else
+                this.n = 4; // This is the same default value definied with .registerProperty()
+
+        p = props.get('--start-alpha');
+        if ('value' in p) 
+            this.startAlpha = p.value; // CSS.registerProperty() supported
+        else 
+            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
+                this.startAlpha = parseFloat(p.toString())
+            else
+                this.startAlpha = 0.2; // This is the same default value definied with .registerProperty()
+
+        p = props.get('--end-alpha');
+        if ('value' in p) 
+            this.endAlpha = p.value; // CSS.registerProperty() supported
+        else 
+            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
+                this.endAlpha = parseFloat(p.toString())
+            else
+                this.endAlpha = 0.2; // This is the same default value definied with .registerProperty()
+    }
+
     paint(ctx, size, props) {
+        this.getProps(props);
+
         let
-            n = props.get('--num-rays').value,
-            startAlpha = props.get('--start-alpha').value,
-            endAlpha = props.get('--end-alpha').value,
             c = [size.width / 2, size.height / 2],
             r = distance(c, [size.width, 0]),
-            deltaTheta = (2 * Math.PI) / (2*n),
+            deltaTheta = (2 * Math.PI) / (2*this.n),
             i
         ;
 
         let gradient = ctx.createRadialGradient(c[0], c[1], 0, c[0], c[1], r);
-        gradient.addColorStop(0, `hsla(0, 0%, 100%, ${startAlpha}`);
-        gradient.addColorStop(1, `hsla(0, 0%, 100%, ${endAlpha}`);
+        gradient.addColorStop(0, `hsla(0, 0%, 100%, ${this.startAlpha}`);
+        gradient.addColorStop(1, `hsla(0, 0%, 100%, ${this.endAlpha}`);
 
         let startAngle = 0;
         ctx.beginPath();
             ctx.fillStyle = gradient;
             ctx.moveTo(c[0], c[1]);
-            for (i = 1; i <= n; i++) {
+            for (i = 1; i <= this.n; i++) {
                 ctx.lineTo(c[0] + r * Math.cos(startAngle), c[1] + r * Math.sin(startAngle));
                 ctx.arc(c[0], c[1], r, startAngle, startAngle + deltaTheta);
                 ctx.lineTo(c[0], c[1]);

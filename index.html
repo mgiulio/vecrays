@@ -20,9 +20,10 @@
 
         .paint-api header {
           --num-rays: 8;
-          /*--start-alpha: 0.2;*/
-          --end-alpha: 0.07;
-          
+          /*
+          --start-alpha: 0.9;
+          --end-alpha: 0.2;
+          */
           background-image: paint(rays);
           background-size: auto;
         }
@@ -33,29 +34,37 @@
     <header></header>
    
     <script>
+      if (!isSecureContext)
+        console.warn('This page is not running in a secute context. Serve it via HTTPS.');
+
       if (CSS.paintWorklet) {
-        document.documentElement.classList.add('paint-api');
-        
-        CSS.registerProperty({
-          name: '--num-rays',
-          syntax: '<integer>',
-          inherits: false,
-          initialValue: 4,
-        });
-        CSS.registerProperty({
-          name: '--start-alpha',
-          syntax: '<number>',
-          inherits: false,
-          initialValue: 0.2,
-        });
-        CSS.registerProperty({
-          name: '--end-alpha',
-          syntax: '<number>',
-          inherits: false,
-          initialValue: 0.2,
-        });
-        
-        CSS.paintWorklet.addModule('paint.js')
+        let root = document.documentElement;
+
+        root.classList.add('paint-api');
+        CSS.paintWorklet.addModule('paint.js');
+
+        if (CSS.registerProperty) {
+          root.classList.add('typed-om');
+
+          CSS.registerProperty({
+            name: '--num-rays',
+            syntax: '<integer>',
+            inherits: false,
+            initialValue: 4,
+          });
+          CSS.registerProperty({
+            name: '--start-alpha',
+            syntax: '<number>',
+            inherits: false,
+            initialValue: 0.2,
+          });
+          CSS.registerProperty({
+            name: '--end-alpha',
+            syntax: '<number>',
+            inherits: false,
+            initialValue: 0.2,
+          });
+        }
       }
     </script>
   </body>
