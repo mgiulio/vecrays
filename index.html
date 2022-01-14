@@ -37,13 +37,13 @@
       if (!isSecureContext)
         console.warn('This page is not running in a secute context. Serve it via HTTPS.');
 
-      if (CSS.paintWorklet) {
+      if ('paintWorklet' in CSS) {
         let root = document.documentElement;
 
         root.classList.add('paint-api');
         CSS.paintWorklet.addModule('paint.js');
 
-        if (CSS.registerProperty) {
+        if ('registerProperty' in CSS) {
           root.classList.add('typed-om');
 
           CSS.registerProperty({
