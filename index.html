@@ -18,14 +18,16 @@
           background-size: cover;
         }
 
-        .paint-api header {
-          --num-rays: 8;
-          /*
-          --start-alpha: 0.9;
-          --end-alpha: 0.2;
-          */
-          background-image: paint(rays);
-          background-size: auto;
+        @supports (background: paint(id)) {
+          header {
+            --num-rays: 8;
+            /*
+            --start-alpha: 0.9;
+            --end-alpha: 0.2;
+            */
+            background-image: paint(rays);
+            background-size: auto;
+          }  
         }
     </style>
   </head>
@@ -40,12 +42,9 @@
       if ('paintWorklet' in CSS) {
         let root = document.documentElement;
 
-        root.classList.add('paint-api');
         CSS.paintWorklet.addModule('paint.js');
 
         if ('registerProperty' in CSS) {
-          root.classList.add('typed-om');
-
           CSS.registerProperty({
             name: '--num-rays',
             syntax: '<integer>',
