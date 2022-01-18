@@ -14,28 +14,19 @@ class Rays {
         if ('value' in p) 
             this.n = p.value; // CSS.registerProperty() supported
         else 
-            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
-                this.n = parseInt(p.toString())
-            else
-                this.n = 4; // This is the same default value definied with .registerProperty()
+            this.n = parseInt(p.toString())
 
         p = props.get('--start-alpha');
         if ('value' in p) 
             this.startAlpha = p.value; // CSS.registerProperty() supported
         else 
-            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
-                this.startAlpha = parseFloat(p.toString())
-            else
-                this.startAlpha = 0.2; // This is the same default value definied with .registerProperty()
+            this.startAlpha = parseFloat(p.toString())
 
         p = props.get('--end-alpha');
         if ('value' in p) 
             this.endAlpha = p.value; // CSS.registerProperty() supported
         else 
-            if (p.length === 1) // CSS.registerProperty() not supported so n is an CSSUnparsedValue object
-                this.endAlpha = parseFloat(p.toString())
-            else
-                this.endAlpha = 0.2; // This is the same default value definied with .registerProperty()
+            this.endAlpha = parseFloat(p.toString())
     }
 
     paint(ctx, size, props) {

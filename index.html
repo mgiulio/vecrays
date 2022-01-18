@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>VecRays</title>
     <style>
         body { margin: 0; }
@@ -18,29 +19,91 @@
           background-size: cover;
         }
 
+        #gui { display: none; }
+
         @supports (background: paint(id)) {
           header {
-            --num-rays: 8;
             /*
-            --start-alpha: 0.9;
-            --end-alpha: 0.2;
+            --num-rays: 18;
+            --start-alpha: 0.10;
+            --end-alpha: 0.90;
             */
             background-image: paint(rays);
             background-size: auto;
           }  
+        
+        #gui {
+          position: absolute;
+          top: 0;
+          right: 0;
+          margin: 1rem;
+          background-color: hsla(0, 0%, 0%, 0.75);
+          padding: 1rem;
+          border-radius: 0.4rem;
+
+          display: block;
         }
+
+        #gui label {
+          display: block;
+          text-align: right;
+          
+          font-family: monospace;
+          font-size: 0.9rem;
+          color: hsl(0, 0%, 75%);
+        }
+        
+        #gui label input {
+          width: 8rem;
+          margin-left: 0.5rem;
+          vertical-align: middle;
+        }
+      }
     </style>
   </head>
  
   <body>
     <header></header>
+
+    <div id="gui">
+      <label for="num-rays">
+        --num-rays: <span>0</span>
+            <input type="range" id="num-rays" name="num-rays" min="2" max="30" step="1">
+          </label>
+      <label for="start-alpha">
+        --start-alpha: <span>0.00</span>
+        <input type="range" id="start-alpha" name="start-alpha" min="0" max="1" step="0.05">
+      </label>
+      <label for="end-alpha">
+        --end-alpha: <span>0.00</span>
+        <input type="range" id="end-alpha" name="end-alpha" min="0" max="1" step="0.05">
+      </label>
+    </div>
    
     <script>
       if (!isSecureContext)
         console.warn('This page is not running in a secute context. Serve it via HTTPS.');
 
-      if ('paintWorklet' in CSS) {
-        let root = document.documentElement;
+      if ('paintWorklet' in CSS)
+        init();
+      else
+        console.warn('The CSS Paint API is not supported, using the fallback image');
+
+      function init() {
+        let defaults = {
+          startAlpha: 1.00,
+          endAlpha: 0.01,
+          numRays: 10
+        };
+
+        let 
+          root = document.documentElement
+          ,gui = document.body.querySelector('#gui')
+          ,numRaysSlider = gui.querySelector('#num-rays')
+          ,startAlphaSlider = gui.querySelector('#start-alpha')
+          ,endAlphaSlider = gui.querySelector('#end-alpha')
+          ,header = document.body.querySelector('header')
+        ;
 
         CSS.paintWorklet.addModule('paint.js');
 
@@ -49,13 +112,13 @@
             name: '--num-rays',
             syntax: '<integer>',
             inherits: false,
-            initialValue: 4,
+            initialValue: defaults.numRays,
           });
           CSS.registerProperty({
             name: '--start-alpha',
             syntax: '<number>',
             inherits: false,
-            initialValue: 0.2,
+            initialValue: defaults.startAlpha,
           });
           CSS.registerProperty({
             name: '--end-alpha',
@@ -64,6 +127,41 @@
             initialValue: 0.2,
           });
         }
+        else {
+          if (getComputedStyle(header).getPropertyValue('--num-rays') === '')
+            header.style.setProperty('--num-rays', defaults.numRays);
+          if (getComputedStyle(header).getPropertyValue('--start-alpha') === '')
+            header.style.setProperty('--start-alpha', defaults.startAlpha);
+          if (getComputedStyle(header).getPropertyValue('--end-alpha') === '')
+            header.style.setProperty('--end-alpha', defaults.endAlpha);
+        }
+
+        numRaysSlider.addEventListener('input', function(e) { 
+          let slider = e.target;
+          let newValue = parseFloat(slider.value);
+          slider.parentElement.querySelector('span').innerText = newValue;
+          header.style.setProperty('--num-rays', newValue); 
+        });
+        numRaysSlider.value = parseFloat(getComputedStyle(header).getPropertyValue('--num-rays'));
+        numRaysSlider.dispatchEvent(new InputEvent('input'));
+        
+        startAlphaSlider.addEventListener('input', function(e) { 
+          let slider = e.target;
+          let newValue = parseFloat(slider.value);
+          slider.parentElement.querySelector('span').innerText = newValue.toFixed(2);
+          header.style.setProperty('--start-alpha', newValue); 
+        });
+        startAlphaSlider.value = parseFloat(getComputedStyle(header).getPropertyValue('--start-alpha'));
+        startAlphaSlider.dispatchEvent(new InputEvent('input'));
+
+        endAlphaSlider.addEventListener('input', function(e) { 
+          let slider = e.target;
+          let newValue = parseFloat(slider.value);
+          slider.parentElement.querySelector('span').innerText = newValue.toFixed(2);
+          header.style.setProperty('--end-alpha', newValue); 
+        });
+        endAlphaSlider.value = parseFloat(getComputedStyle(header).getPropertyValue('--end-alpha'));
+        endAlphaSlider.dispatchEvent(new InputEvent('input'));
       }
     </script>
   </body>
