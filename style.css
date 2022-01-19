@@ -1,8 +1,10 @@
+:root {
+    --bg-color: hsl(351deg, 100%, 71%);
+}
+
 body { margin: 0; }
 
 header {
-    --bg-color: hsl(351deg, 100%, 71%);
-    
     height: 100vh;
 
     background-color: var(--bg-color);
@@ -46,9 +48,10 @@ header {
         color: hsl(0, 0%, 75%);
     }
 
-    #gui label input {
+    #gui label input[type="range"] {
         width: 8rem;
         margin-left: 0.5rem;
         vertical-align: middle;
+        /*accent-color: var(--bg-color);*/
     }
 }
