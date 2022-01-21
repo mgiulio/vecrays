@@ -23,7 +23,7 @@ else
     ;
 
     CSS.paintWorklet.addModule('paint.js');
-
+    
     if ('registerProperty' in CSS) {
         CSS.registerProperty({
         name: '--num-rays',
